@@ -5,7 +5,7 @@
  */
 function getAndSendLocation( ) {
 	const resultField = document.querySelector('#myLocation');
-	const url = "http://localhost:8080/potatoeslb/DiseaseReport";
+	const url = "DiseaseReport";
 
 	// check if geolocation is supported/enabled on current browser
 	if ("geolocation" in navigator) { 
