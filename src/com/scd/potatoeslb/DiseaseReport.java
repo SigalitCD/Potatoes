@@ -36,13 +36,30 @@ public class DiseaseReport extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println( "Starting doGet (out)");
+		System.err.println( "Starting doGet (err)");
+		
 		String latitude = request.getParameter("latitude");
 		String longitude = request.getParameter("longitude");
 		String timestampStr = request.getParameter("timestamp");
 		Long timestampLong = Long.valueOf(timestampStr);
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampLong), TimeZone.getDefault().toZoneId());  
-		
+				
 		AnnotationConfigApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		if ( context == null ) {
+			System.out.println( "Failed to get ApplicationContext (out)");
+			System.err.println( "Failed to get ApplicationContext (err)");
+		}
+		
+		else {
+			System.out.println("Succeeded to get ApplicationContext (out)");
+			System.err.println("Succeeded to get ApplicationContext (err)");
+		}
+
+		
+
+		System.out.println( "Starting doGet (out)");
+		System.err.println( "Starting doGet (err)");
 		
 		
 		IReportDAO reportDAO = context.getBean(IReportDAO.class);
@@ -51,7 +68,6 @@ public class DiseaseReport extends HttpServlet {
 			System.out.println( "Failed to get ReportDAO (out)");
 			System.err.println( "Failed to get ReportDAO (err)");
 		}
-		
 		else {
 			System.out.println("Succeeded to get ReportDAO (out)");
 			System.err.println("Succeeded to get ReportDAO (err)");
