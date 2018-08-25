@@ -43,7 +43,19 @@ public class DiseaseReport extends HttpServlet {
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampLong), TimeZone.getDefault().toZoneId());  
 		
 		AnnotationConfigApplicationContext context = ApplicationContextProvider.getApplicationContext();
+		
+		
 		IReportDAO reportDAO = context.getBean(IReportDAO.class);
+		
+		if ( reportDAO == null ) {
+			System.out.println( "Failed to get ReportDAO (out)");
+			System.err.println( "Failed to get ReportDAO (err)");
+		}
+		
+		else {
+			System.out.println("Succeeded to get ReportDAO (out)");
+			System.err.println("Succeeded to get ReportDAO (err)");
+		}
 			
 		response.getWriter().append("Disease Report accepted at: ").append(request.getContextPath());
 

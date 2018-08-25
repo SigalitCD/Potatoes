@@ -23,7 +23,7 @@ public class AppConfig {
 	private final String PASSWORD = "dbpassword";
 
 	@Bean
-	DataSource dataSource() {
+	DataSource dataSourceLocal() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		driverManagerDataSource.setUrl(environment.getProperty(URL));
 		driverManagerDataSource.setUsername(environment.getProperty(USER));
@@ -31,4 +31,31 @@ public class AppConfig {
 		driverManagerDataSource.setDriverClassName(environment.getProperty(DRIVER));
 		return driverManagerDataSource;
 	}
+	
+	@Bean
+	DataSource dataSource() {
+		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+		driverManagerDataSource.setUrl(System.getenv("JDBC_DATABASE_URL"));
+		driverManagerDataSource.setUsername(System.getenv("JDBC_DATABASE_USERNAME"));
+		driverManagerDataSource.setPassword(System.getenv("JDBC_DATABASE_PASSWORD"));
+		driverManagerDataSource.setDriverClassName(environment.getProperty(DRIVER));
+		return driverManagerDataSource;
+	}
+	
+	
+	
+/*    @Bean
+    public BasicDataSource dataSource1() throws URISyntaxException {
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        String username = System.getenv("JDBC_DATABASE_USERNAME");
+        String password = System.getenv("JDBC_DATABASE_PASSWORD");
+
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUsername(username);
+        basicDataSource.setPassword(password);
+
+        return basicDataSource;
+    }
+*/
 }
