@@ -56,12 +56,6 @@ public class DiseaseReport extends HttpServlet {
 			System.err.println("Succeeded to get ApplicationContext (err)");
 		}
 
-		
-
-		System.out.println( "Starting doGet (out)");
-		System.err.println( "Starting doGet (err)");
-		
-		
 		IReportDAO reportDAO = context.getBean(IReportDAO.class);
 		
 		if ( reportDAO == null ) {
