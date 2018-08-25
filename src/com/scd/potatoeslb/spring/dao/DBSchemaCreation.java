@@ -18,8 +18,11 @@ public class DBSchemaCreation {
 		
 		
 		public void createSchema() {
-			jdbcTemplate.execute("CREATE IF NOT EXISTS SCHEMA potatoes");
+			System.out.println("Before schema creation");
+			jdbcTemplate.execute("CREATE SCHEMA potatoes");
 			jdbcTemplate.execute("CREATE IF NOT EXISTS table potatoes.test (first_name character varying(50))");
+			System.out.println("After schema creation");
+
 		}
 		
 	}
