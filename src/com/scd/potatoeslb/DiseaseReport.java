@@ -70,7 +70,7 @@ public class DiseaseReport extends HttpServlet {
 		response.getWriter().append("Disease Report accepted at: ").append(request.getContextPath());
 
 		// validate data structure, put data to database and maybe awake Risk map calculator 
-		boolean b = reportDAO.createReport(new Report( 4, 2, localDateTime, latitude, longitude ));
+		boolean b = reportDAO.createReport(new Report( 0, 1, localDateTime, latitude, longitude ));
 
 	}
 

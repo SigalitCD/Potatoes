@@ -21,7 +21,7 @@ public class ReportDAO implements IReportDAO {
 	private final String SQL_GET_REPORTS_BY_FARMER = "select * from report where farmer_id = ?";
 	private final String SQL_DELETE = "delete from report where id = ?";
 	private final String SQL_UPDATE = "update report set farmer_id = ?, report_time = ?, latitude = ?, longitude = ? where id = ?";
-	private final String SQL_INSERT = "insert into report(farmer_id, report_time, latitude, longitude) values(?,?,?,?)";
+	private final String SQL_INSERT = "insert into potatoes.report(farmer_id, report_time, latitude, longitude) values(?,?,?,?)";
 
 	@Autowired
 	public ReportDAO(DataSource dataSource) {
