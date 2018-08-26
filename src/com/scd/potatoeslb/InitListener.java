@@ -12,6 +12,8 @@ import com.scd.potatoeslb.spring.dao.DBSchemaCreation;
 @WebListener
 public class InitListener implements ServletContextListener {
 	
+	private static final boolean bCreateDB = true;
+	
 	private MeteorologyScheduler mst;
 	
     @Override
