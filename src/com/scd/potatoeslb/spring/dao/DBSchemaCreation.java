@@ -21,12 +21,12 @@ public class DBSchemaCreation {
 			System.out.println("Before schema creation");
 			jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS potatoes");
 			
-			
+			jdbcTemplate.execute("SET search_path TO potatoes, public;");
+
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.farmer_id_seq");
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.meteorological_station_id_seq");	
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.meteorology_id_seq");
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.report_id_seq");	
-			
 			
 			jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS potatoes.farmer " + 
 					"( " + 
@@ -41,7 +41,6 @@ public class DBSchemaCreation {
 					"CREATE INDEX IF NOT EXISTS farmer_first_name_last_name_idx " + 
 					"    ON potatoes.farmer USING btree " + 
 					"    (last_name COLLATE pg_catalog.\"default\", first_name COLLATE pg_catalog.\"default\")");
-
 			
 			jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS potatoes.meteorological_station " + 
 					"( " + 
@@ -68,8 +67,7 @@ public class DBSchemaCreation {
 					"        ON UPDATE RESTRICT " + 
 					"        ON DELETE CASCADE ) " + 
 					"WITH ( OIDS = FALSE )");
-			
-			
+						
 			jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS potatoes.report " + 
 					"( " + 
 					"    id integer NOT NULL DEFAULT nextval('potatoes.report_id_seq'::regclass), " + 
@@ -82,18 +80,13 @@ public class DBSchemaCreation {
 					"        REFERENCES potatoes.farmer (id) MATCH SIMPLE " + 
 					"        ON UPDATE RESTRICT " + 
 					"        ON DELETE CASCADE ) " + 
-					"WITH ( OIDS = FALSE )");
-			
+					"WITH ( OIDS = FALSE )");			
 			
 			jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS report_report_time_idx " + 
 					"    ON potatoes.report USING btree " + 
-					"    (report_time) " );
+					"    (report_time) " );			
 			
-			
-			jdbcTemplate.execute("");
-			jdbcTemplate.execute("");
 			System.out.println("After schema creation");
-
 		}
 		
 	}
