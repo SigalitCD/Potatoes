@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="windows-1255">
-<meta http-equiv="refresh" content="0; url=report.html"/>
-<title></title>
-</head>
-<body>
-<p><a href="report.html">Redirect</a></p>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"> 
+    <script type="text/javascript">
+    	function getCookie(cname) {
+    		var name = cname + "=";
+    		var decodedCookie = decodeURIComponent(document.cookie);
+    		var ca = decodedCookie.split(';');
+    		for(var i = 0; i <ca.length; i++) {
+    			var c = ca[i];
+    			while (c.charAt(0) == ' ') {
+    				c = c.substring(1);
+    			}
+    			if (c.indexOf(name) == 0) {
+    				return c.substring(name.length, c.length);
+    			}
+    		}
+    		return "";
+    	}
+
+    	function doLogin() {
+    		var name = getCookie('name');
+    		var last_name = getCookie('last_name');
+    		var userid = getCookie('userid');
+
+    		if (userid) {
+    			// user identified
+                document.location = 'report.html';
+    			return true;
+    		}
+            document.location = 'login.html';
+    		return false;
+    	}
+    </script>
+  </head>
+  <body onload="doLogin()">
+  	Checking...
+  </body>
 </html>
+

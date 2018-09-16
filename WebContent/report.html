@@ -1,26 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="windows-1255">
-<title>Report for better potatoes</title>
+	<title>Report for better potatoes</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.0.0/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+	.btn-circle {
+		padding: 6px 0px;
+		text-align: center;
+		font-size: 12px;
+		line-height: 1.42857;
+
+		height: 250px;
+		width: 250px;
+		border-radius: 50%;
+		font-size: 4rem;
+	}
+
+</style>
 </head>
+
 <body>
-	<header><h1>Report for BETTER POTATOES</h1></header>
+	<div class="container">
+		<center>
+			<h1>לחץ על הכפתור לדיווח על מחלה במיקומך</h1>
 
-	<div id=myLocation></div>
-		
-	<h2>Click here to report disease spread at your current location</h2>
-	
+			<div id=myLocation></div>
 
-	<!--script src="jquery-3.3.1.js"></script-->
+
+			<div id="the-big-blue-button" style="align: center">
+				<button type="button" class="mx-auto btn btn-primary btn-circle" onclick="getAndSendLocation()" autofocus>שלח</button>
+			</div>
+		</center>
+	</div>	
+
 	<script src="reportDisease.js"></script> 
-
-	<div style="align: center">
-		<button type="button" onclick="getAndSendLocation()" autofocus style="background-color: green; color:yellow; border: none; font-size: 16px; text-align: center; height: 50px; width: 250px;">REPORT</button>
-	</div>
-
-
-
 
 </body>
 </html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.0.0/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+	<div class="container">
+		<h1>כניסה ראשונה למערכת</h1>
+		<p>
+			<form id="login_form" action="/action_page.php">
+				<div class="form-group">
+
+					<label for="name" class="he">שם</label>
+					<input type="name" class="form-control" id="name">
+				</div>
+
+				<div class="form-group">
+
+					<label for="last_name" class="he">משפחה</label>
+					<input type="name" class="form-control" id="last_name">
+				</div>
+				<div class="form-group">
+
+					<label for="phone" class="he">טלפון</label>
+					<input type="phone" class="form-control" id="phone">
+				</div>
+				<div class="form-group">
+
+					<button type="submit" class="btn btn-primary">
+						<span class="he">שלח</span>
+					</button>
+				</div>
+			</form>  	
+
+		</p>
+	</div>
+
+
+<script type="text/javascript">
+
+	$('#login_form').submit(function (event) {
+		// validate the parameters
+		var name = $('#name').val();
+		var last_name = $('#last_name').val();
+		var phone = $('#phone').val();
+
+		console.log('name: ' + name);
+		console.log('last: ' + last_name);
+		console.log('phone:' + phone);
+		if (!name || !last_name || !phone) {
+			// are you sure?
+			//$( "span" ).text( "missing values" ).show().fadeOut( 1000 );
+			console.log('missing values');
+			event.preventDefault();
+			return;
+		}
+
+		// TODO: make sure the user name include only valid chars
+		var cookiesString = "name=" + name;
+		cookiesString += ";last_name=" + last_name;
+		cookiesString += ";phone=" + phone;
+
+		// do the ajax call to get an id
+		$.ajax({
+			method: "GET"
+			,url: "getId"
+			,cache: false
+			//,context: document.body
+		}).done(function(msg) {
+
+			var user_id = msg;
+			cookiesString += ";user_id=" + user_id;
+			document.cookie = cookiesString;
+			document.location = 'report.html';
+
+		}).fail(function( jqXHR, textStatus, errorThrown ) {
+			console.log('ERROR: ' + textStatus);
+			console.log('ERROR: ' + errorThrown);
+		}).always(function( data_or_jqXHR, textStatus, jqXHR_or_errorThrown ) { 
+			document.location = 'report.html';			
+		});;
+
+		// prevent original action
+		event.preventDefault();
+	});
+
+</script>
+
+</body>
+</html>
