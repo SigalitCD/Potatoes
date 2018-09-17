@@ -22,14 +22,19 @@
     	function doLogin() {
     		var name = getCookie('name');
     		var last_name = getCookie('last_name');
-    		var userid = getCookie('userid');
+    		var userid = getCookie('user_id');
+    		console.log('name='+name);
+    		console.log('last_name='+last_name);
+    		console.log('user_id='+userid);
 
     		if (userid) {
     			// user identified
                 document.location = 'report.html';
+    			//console.log('document.location = report.html');
     			return true;
     		}
             document.location = 'login.html';
+            //console.log('document.location = login.html');
     		return false;
     	}
     </script>

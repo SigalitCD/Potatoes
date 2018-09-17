@@ -52,9 +52,6 @@
 		var last_name = $('#last_name').val();
 		var phone = $('#phone').val();
 
-		console.log('name: ' + name);
-		console.log('last: ' + last_name);
-		console.log('phone:' + phone);
 		if (!name || !last_name || !phone) {
 			// are you sure?
 			//$( "span" ).text( "missing values" ).show().fadeOut( 1000 );
@@ -64,21 +61,25 @@
 		}
 
 		// TODO: make sure the user name include only valid chars
-		var cookiesString = "name=" + name;
-		cookiesString += ";last_name=" + last_name;
-		cookiesString += ";phone=" + phone;
+		document.cookie = "name=" + name;
+		document.cookie = "last_name=" + last_name;
+		document.cookie = "phone=" + phone;
 
 		// do the ajax call to get an id
 		$.ajax({
 			method: "GET"
-			,url: "getId"
+			,url: "GetNewFarmerId"
+			,data: {
+				fName: name
+				,lName: last_name
+				,phone: phone
+			}
 			,cache: false
 			//,context: document.body
 		}).done(function(msg) {
 
 			var user_id = msg;
-			cookiesString += ";user_id=" + user_id;
-			document.cookie = cookiesString;
+			document.cookie = "user_id=" + user_id;
 			document.location = 'report.html';
 
 		}).fail(function( jqXHR, textStatus, errorThrown ) {

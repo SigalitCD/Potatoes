@@ -8,6 +8,6 @@ public interface IFarmerDAO {
 	List<Farmer> getAllFarmers();
 	boolean deleteFarmer(Long id);
 	boolean updateFarmer(Farmer farmer);
-	boolean createFarmer(Farmer farmer);
+	int createFarmer(Farmer farmer);
 }
 

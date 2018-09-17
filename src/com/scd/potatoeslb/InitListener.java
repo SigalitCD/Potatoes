@@ -33,7 +33,5 @@ public class InitListener implements ServletContextListener {
     	if ( mst != null ) {
     		mst.stopScheduledTask();
     	}
-    	
-
     }
 }

@@ -21,7 +21,11 @@ public class DBSchemaCreation {
 			System.out.println("Before schema creation");
 			jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS potatoes");
 			
-			jdbcTemplate.execute("SET search_path TO potatoes, public;");
+			//jdbcTemplate.execute("SET search_path TO potatoes, public;");
+			
+			String username = jdbcTemplate.queryForObject("SELECT CURRENT_USER", String.class);
+			
+			jdbcTemplate.execute("ALTER ROLE " + username + " SET search_path TO potatoes, public");
 
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.farmer_id_seq");
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.meteorological_station_id_seq");	

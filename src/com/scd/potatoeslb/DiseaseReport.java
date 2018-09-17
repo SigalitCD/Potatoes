@@ -19,7 +19,7 @@ import com.scd.potatoeslb.spring.dao.IReportDAO;
 /**
  * Servlet implementation class DiseaseReport
  */
-@WebServlet(description = "This class handles the farmers information about disease spread: geolocation and current time", urlPatterns = { "/DiseaseReport" })
+@WebServlet(description = "This class handles the farmers report about disease spread: geolocation and current time", urlPatterns = { "/DiseaseReport" })
 public class DiseaseReport extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -44,7 +44,9 @@ public class DiseaseReport extends HttpServlet {
 		String timestampStr = request.getParameter("timestamp");
 		Long timestampLong = Long.valueOf(timestampStr);
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampLong), TimeZone.getDefault().toZoneId());  
-				
+		String farmerIdStr = request.getParameter("farmerId");
+		int farmerId = Integer.valueOf(farmerIdStr);
+		
 		AnnotationConfigApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		if ( context == null ) {
 			System.out.println( "Failed to get ApplicationContext (out)");
@@ -59,18 +61,19 @@ public class DiseaseReport extends HttpServlet {
 		IReportDAO reportDAO = context.getBean(IReportDAO.class);
 		
 		if ( reportDAO == null ) {
-			System.out.println( "Failed to get ReportDAO (out)");
 			System.err.println( "Failed to get ReportDAO (err)");
 		}
 		else {
 			System.out.println("Succeeded to get ReportDAO (out)");
-			System.err.println("Succeeded to get ReportDAO (err)");
 		}
 			
 		response.getWriter().append("Disease Report accepted at: ").append(request.getContextPath());
 
 		// validate data structure, put data to database and maybe awake Risk map calculator 
-		boolean b = reportDAO.createReport(new Report( 0, 1, localDateTime, latitude, longitude ));
+		boolean b = reportDAO.createReport(new Report( 0, farmerId, localDateTime, latitude, longitude ));
+		if ( b ) {
+			System.out.println("Succeeded to add new Report record to database");
+		}
 
 	}
 

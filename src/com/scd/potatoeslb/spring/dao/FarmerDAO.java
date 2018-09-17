@@ -20,7 +20,7 @@ public class FarmerDAO implements IFarmerDAO {
 	private final String SQL_GET_ALL = "select * from farmer";
 	private final String SQL_DELETE = "delete from farmer where id = ?";
 	private final String SQL_UPDATE = "update farmer set first_name = ?, last_name = ?, phone_number = ? where id = ?";
-	private final String SQL_INSERT = "insert into farmer(first_name, last_name, phone_number) values(?,?,?)";
+	private final String SQL_INSERT = "insert into farmer(first_name, last_name, phone_number) values(?,?,?) returning id";
 
 	@Autowired
 	public FarmerDAO(DataSource dataSource) {
@@ -48,8 +48,8 @@ public class FarmerDAO implements IFarmerDAO {
 	}
 
 	@Override
-	public boolean createFarmer(Farmer farmer) {
-		return jdbcTemplate.update(SQL_INSERT, farmer.getFirstName(), farmer.getLastName(), farmer.getPhoneNumber()) > 0;
+	public int createFarmer(Farmer farmer) {
+		return jdbcTemplate.queryForObject(SQL_INSERT, Integer.class, farmer.getFirstName(), farmer.getLastName(), farmer.getPhoneNumber()); //(SQL_INSERT, Integer.class, ) > 0;
 	}
 
 }

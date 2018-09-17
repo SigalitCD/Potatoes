@@ -23,7 +23,7 @@ public class AppConfig {
 	private final String PASSWORD = "dbpassword";
 
 	@Bean
-	DataSource dataSourceLocal() {
+	DataSource dataSource() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		driverManagerDataSource.setUrl(environment.getProperty(URL));
 		driverManagerDataSource.setUsername(environment.getProperty(USER));
@@ -32,7 +32,7 @@ public class AppConfig {
 		return driverManagerDataSource;
 	}
 	
-	@Bean
+/*	@Bean
 	DataSource dataSource() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		driverManagerDataSource.setUrl(System.getenv("JDBC_DATABASE_URL"));
@@ -41,4 +41,4 @@ public class AppConfig {
 		driverManagerDataSource.setDriverClassName(environment.getProperty(DRIVER));
 		return driverManagerDataSource;
 	}
-}
+*/}
