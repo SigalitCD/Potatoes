@@ -24,6 +24,12 @@ function getAndSendLocation( ) {
 	//const resultField = document.querySelector('#myLocation');
 	const url = "DiseaseReport";
 	var userid = getCookie('user_id');
+	
+	if (!userid || userid == "") {
+		// user need to log in first
+	    document.location = 'login.html';
+		return true;
+	}
 
 	// check if geolocation is supported/enabled on current browser
 	if ("geolocation" in navigator) { 
@@ -46,7 +52,7 @@ function getAndSendLocation( ) {
 							$('#the-big-blue-button button').text('תודה');
 							$('#the-big-blue-button button').prepend('<span class="glyphicon glyphicon-ok"></span>');
 						} else {
-							alert('Failed to send report');
+							alert('Failed to send report: ' + response.ok);
 						}	   
 					}, networkError => alert('Network Error'));
 				},
