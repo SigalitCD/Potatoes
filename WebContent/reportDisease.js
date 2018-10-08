@@ -80,3 +80,12 @@ function getAndSendLocation( ) {
 		alert('Geolocation is not enabled on this browser. Please enable the browser to send your location in order to report.');
 	}
 }
+
+(function () {
+	var userid = getCookie('user_id');
+	if (!userid || userid == "") {
+		// user need to log in first
+	    document.location = 'login.html';
+		return true;
+	}
+})();
