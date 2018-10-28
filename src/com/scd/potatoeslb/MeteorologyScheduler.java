@@ -58,7 +58,7 @@ public class MeteorologyScheduler {
 			if ( !saveToDB(meteorology) ) {
 				System.out.println("Failed to save meteorolgy data to Database");
 			}
-		}, 1, INTERVAL, TimeUnit.MINUTES); // TODO: change TimeUnit to minutes on production!
+		}, 2, INTERVAL, TimeUnit.MINUTES); // TODO: change TimeUnit to minutes on production!
 	}
 	
 	public void stopScheduledTask() {

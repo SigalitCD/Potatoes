@@ -63,6 +63,7 @@ public class DBSchemaCreation {
 					"    id integer NOT NULL DEFAULT nextval('potatoes.meteorology_id_seq'::regclass), " + 
 					"    \"time\" timestamp without time zone, " + 
 					"    station_id integer NOT NULL, " + 
+					"    is_valid boolean NOT NULL, " + 
 					"    relative_humidity integer, " + 
 					"    wind_direction integer, " + 
 					"    CONSTRAINT meteorology_pkey PRIMARY KEY (id), " + 
