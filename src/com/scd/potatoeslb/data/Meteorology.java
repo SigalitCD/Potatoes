@@ -6,16 +6,18 @@ public class Meteorology {
 	private int id;
 	private int stationId;
 	private LocalDateTime sampleTime;
+	private boolean isValid;
 	private int relativeHumidity;
 	private int windDirection;
 	
 	public Meteorology() {
 	}
 	
-	public Meteorology(int id, int stationId, LocalDateTime sampleTime, int relativeHumidity, int windDirection) {
+	public Meteorology(int id, int stationId, LocalDateTime sampleTime, boolean isValid, int relativeHumidity, int windDirection) {
 		this.id = id;
 		this.stationId = stationId;
 		this.sampleTime = sampleTime;
+		this.isValid = isValid;
 		this.relativeHumidity = relativeHumidity;
 		this.windDirection = windDirection;
 	}
@@ -60,10 +62,18 @@ public class Meteorology {
 	public void setWindDirection(int windDirection) {
 		this.windDirection = windDirection;
 	}
+	
+	public boolean isValid() {
+		return isValid;
+	}
+
+	public void setValid(boolean isValid) {
+		this.isValid = isValid;
+	}
 
 	@Override
 	public String toString() {
-		return "Meteorology [id=" + id + ", stationId=" + stationId + ", sampleTime=" + sampleTime
+		return "Meteorology [id=" + id + ", stationId=" + stationId + ", sampleTime=" + sampleTime + ", isValid=" + isValid
 				+ ", relativeHumidity=" + relativeHumidity + ", windDirection=" + windDirection + "]";
 	}
 

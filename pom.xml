@@ -7,10 +7,15 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<properties>
-		<spring.framework>4.3.0.RELEASE</spring.framework>
+		<spring.framework>5.1.1.RELEASE</spring.framework>
 		<postgres.version>42.1.4</postgres.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.8.1</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>

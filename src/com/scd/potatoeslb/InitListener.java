@@ -20,9 +20,10 @@ public class InitListener implements ServletContextListener {
     public final void contextInitialized(final ServletContextEvent sce) {
 
     	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-/*		mst = new MeteorologyScheduler();
+
+    	//let this code out of comment when we want it to work!
+    	mst = new MeteorologyScheduler();
 		mst.startScheduledTask();
-*/ //TODO: let this code out of comment when we want it to work!
     	
     	DBSchemaCreation schemaCreator = context.getBean(DBSchemaCreation.class);
     	schemaCreator.createSchema();   	
