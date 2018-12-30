@@ -1,9 +1,6 @@
-package com.scd.potatoeslb;
+package com.scd.potatoeslb.servlets;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,22 +8,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.scd.potatoeslb.data.Report;
+import com.scd.potatoeslb.ApplicationContextProvider;
 import com.scd.potatoeslb.spring.dao.IReportDAO;
 
 /**
- * Servlet implementation class DiseaseReport
+ * Servlet implementation class InfectionsMap
  */
-@WebServlet(description = "This class handles the farmers report about disease spread: geolocation and current time", urlPatterns = { "/DiseaseReport" })
-public class DiseaseReport extends HttpServlet {
+@WebServlet(description = "This servlet creates a new Farmer record and returns its id in the response.", urlPatterns = { "/InfectionsMap" })
+public class InfectionsMap extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DiseaseReport() {
+    public InfectionsMap() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,42 +34,27 @@ public class DiseaseReport extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println( "Starting doGet (out)");
-		System.err.println( "Starting doGet (err)");
-		
-		String latitude = request.getParameter("latitude");
-		String longitude = request.getParameter("longitude");
-		String timestampStr = request.getParameter("timestamp");
-		Long timestampLong = Long.valueOf(timestampStr);
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampLong), TimeZone.getDefault().toZoneId());  
-		String farmerIdStr = request.getParameter("farmerId");
-		int farmerId = Integer.valueOf(farmerIdStr);
-		
+		// get all infected coordinates from database 
 		AnnotationConfigApplicationContext context = ApplicationContextProvider.getApplicationContext();
 		if ( context == null ) {
 			System.err.println( "Failed to get ApplicationContext (err)");
 		}
 
 		IReportDAO reportDAO = context.getBean(IReportDAO.class);
-		
 		if ( reportDAO == null ) {
 			System.err.println( "Failed to get ReportDAO (err)");
 		}
-			
-		response.getWriter().append("Disease Report accepted at: ").append(request.getContextPath());
-
-		// validate data structure, put data to database and maybe awake Risk map calculator 
-		boolean b = reportDAO.createReport(new Report( 0, farmerId, localDateTime, latitude, longitude ));
-		if ( b ) {
-			System.out.println("Succeeded to add new Report record to database");
-		}
-
-	}
+		JSONArray jsonArray = reportDAO.getDistinctReports();
+		if( jsonArray != null ) {
+			response.getWriter().append( jsonArray.toString());
+		}		
+	}	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -22,6 +22,7 @@ public class MeteorologyScheduler {
 	// TODO: get api url from properties file
 	// TODO: define intervals in properties file
 	// TODO: check meta-data? maybe in case of problems? 
+	// TODO: check if we need to change the values of RH and WD to float instead of int
 
 	private static final int CHANNEL_STATUS_VALID = 1;
 	private static final int CHANNEL_STATUS_INVALID = 2;
@@ -83,7 +84,7 @@ public class MeteorologyScheduler {
 				}
 				in.close();
 				responseData = response.toString();
-				System.out.println("METEOROLOGICAL RESPONSE DATA==================>" + responseData );
+				//System.out.println("METEOROLOGICAL RESPONSE DATA==================>" + responseData );
 			}
 			else {
 				System.out.println("Data request from the Meteorological Service failed. Response code: '" + responseCode + "'");

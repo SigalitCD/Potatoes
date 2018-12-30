@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.RowMapper;
 
 public class ReportMapper implements RowMapper<Report> {
 	
-	Report report = new Report();
 
 	@Override
 	public Report mapRow(ResultSet resultSet, int i) throws SQLException {
+		Report report = new Report();
 		report.setId(resultSet.getInt("id"));
 		report.setFarmerId(resultSet.getInt("farmer_id"));
 		report.setReportTime(resultSet.getTimestamp("report_time").toLocalDateTime());
