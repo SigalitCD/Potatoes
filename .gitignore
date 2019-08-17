@@ -27,3 +27,8 @@ hs_err_pid*
 target/
 
 js/api-key.js
+
+
+# JDT-specific (Eclipse Java Development Tools)     
+.classpath
+.settings/
