@@ -18,19 +18,19 @@
 			<form id="login_form" action="/action_page.php">
 				<div class="form-group">
 
-					<label for="name" class="he">שם</label>
-					<input  dir="rtl" type="name" class="form-control" id="name">
+					<label for="name" class="he">שם פרטי</label>
+					<input  dir="rtl" type="text" class="form-control" id="name" />
 				</div>
 
 				<div class="form-group">
 
-					<label for="last_name" class="he">משפחה</label>
-					<input dir="rtl" type="name" class="form-control" id="last_name">
+					<label for="last_name" class="he">שם משפחה</label>
+					<input dir="rtl" type="text" class="form-control" id="last_name">
 				</div>
 				<div class="form-group">
 
 					<label for="phone" class="he">טלפון</label>
-					<input dir="rtl" type="phone" class="form-control" id="phone">
+					<input dir="rtl" type="tel" pattern="[\-\d ]+" title='ספרות בלבד' class="form-control" id="phone">
 				</div>
 				<div class="form-group">
 
@@ -39,8 +39,6 @@
 					</button>
 				</div>
 			</form>  	
-
-		</p>
 	</div>
 
 
@@ -48,17 +46,51 @@
 
 	$('#login_form').submit(function (event) {
 		// validate the parameters
-		var name = $('#name').val();
-		var last_name = $('#last_name').val();
-		var phone = $('#phone').val();
-
+		var name = $('#name').val().trim(); 
+		$('#name').val(name);
+		
+		var last_name = $('#last_name').val().trim();
+		$('#last_name').val(last_name);
+		
+		var phone = $('#phone').val().trim();
+		$('#phone').val(phone);
+		
 		if (!name || !last_name || !phone) {
 			// are you sure?
 			//$( "span" ).text( "missing values" ).show().fadeOut( 1000 );
+			var warning_msg = "מידע חסר";
+			if (!name) {
+				console.log('name is missing');
+				warning_msg = "נא להכניס שם פרטי";
+				$('#name').focus();
+			} else if (!last_name) {
+				console.log('last name is missing');
+				warning_msg = "נא להכניס שם משפחה";
+				$('#last_name').focus();
+			} else if (!phone) {
+				console.log('phone is missing');
+				warning_msg = "נא להכניס מספר טלפון";
+				$('#phone').focus();
+			}
+			
+			
+			var warning_box = $("#warning_box");
+			if (warning_box.length) warning_box.remove();
+			
+			$("<div />", {
+				id: "warning_box" 
+				,class: "alert alert-danger alert-dismissible" 
+				,role: "alert"
+			})
+			.html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + warning_msg)
+			.appendTo($("#login_form"));
 			console.log('missing values');
 			event.preventDefault();
 			return;
 		}
+		console.log("name [" + name + "]");
+		console.log("last_name [" + last_name + "]");
+		console.log("phone [" + phone + "]");
 
 		// TODO: make sure the user name include only valid chars
 		document.cookie = "name=" + name;
