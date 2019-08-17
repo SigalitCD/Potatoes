@@ -1,4 +1,4 @@
-package com.scd.potatoeslb;
+package com.scd.potatoeslb.servlets;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.scd.potatoeslb.ApplicationContextProvider;
 import com.scd.potatoeslb.data.Report;
 import com.scd.potatoeslb.spring.dao.IReportDAO;
 

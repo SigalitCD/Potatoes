@@ -11,15 +11,14 @@ import com.scd.potatoeslb.spring.dao.DBSchemaCreation;
 
 @WebListener
 public class InitListener implements ServletContextListener {
-	
-	private static final boolean bCreateDB = true;
-	
+		
 	private MeteorologyScheduler mst;
 	
     @Override
     public final void contextInitialized(final ServletContextEvent sce) {
 
-    	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    	@SuppressWarnings("resource")
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
     	//let this code out of comment when we want it to work!
     	mst = new MeteorologyScheduler();
