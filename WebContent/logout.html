@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.0.0/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+	<div class="container">
+		<h1>יציאה מהמערכת</h1>
+		<p>
+			<form id="login_form" action="/action_page.php">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">
+						<span class="he">יציאה</span>
+					</button>
+				</div>
+			</form>  	
+	</div>
+	
+
+<script type="text/javascript">
+	function delete_cookie( name ) {
+		document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	}
+
+	$('#login_form').submit(function (event) {
+		
+		delete_cookie("user_id=");
+		document.location = 'index.html';
+
+		// prevent original action
+		event.preventDefault();
+	});
+
+</script>
+
+	
+</body>
+</html>
