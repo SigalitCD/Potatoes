@@ -20,7 +20,8 @@ public class ReportDAO implements IReportDAO {
 
 	private final String SQL_GET_BY_ID = "select * from report where id = ?";
 	private final String SQL_GET_ALL = "select * from report";
-	private final String SQL_GET_DISTINCT = "select distinct latitude as lat, longitude as lng, 0 as id, 0 as farmer_id, now() as report_time from report";
+	//private final String SQL_GET_DISTINCT = "select distinct latitude as lat, longitude as lng, 0 as id, 0 as farmer_id, now() as report_time from report";
+	private final String SQL_GET_DISTINCT = "select distinct latitude as lat, longitude as lng, 0 as id, 0 as farmer_id, report_time as report_time from report";
 	private final String SQL_GET_REPORTS_BY_FARMER = "select * from report where farmer_id = ?";
 	private final String SQL_DELETE = "delete from report where id = ?";
 	private final String SQL_UPDATE = "update report set farmer_id = ?, report_time = ?, latitude = ?, longitude = ? where id = ?";
