@@ -2,27 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"> 
+    <script src="js/js.cookie.min.js"></script>
+    
     <script type="text/javascript">
-    	function getCookie(cname) {
-    		var name = cname + "=";
-    		var decodedCookie = decodeURIComponent(document.cookie);
-    		var ca = decodedCookie.split(';');
-    		for(var i = 0; i <ca.length; i++) {
-    			var c = ca[i];
-    			while (c.charAt(0) == ' ') {
-    				c = c.substring(1);
-    			}
-    			if (c.indexOf(name) == 0) {
-    				return c.substring(name.length, c.length);
-    			}
-    		}
-    		return "";
-    	}
-
     	function doLogin() {
-    		var name = getCookie('name');
-    		var last_name = getCookie('last_name');
-    		var userid = getCookie('user_id');
+    		var name = Cookies.get('name');
+    		var last_name = Cookies.get('last_name');
+    		var userid = Cookies.get('user_id');
     		console.log('name='+name);
     		console.log('last_name='+last_name);
     		console.log('user_id='+userid);

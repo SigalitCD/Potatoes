@@ -9,6 +9,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 	<script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js"></script>
+	<script src="js/js.cookie.min.js"></script>
 </head>
 <body>
 
@@ -43,23 +44,7 @@
 
 
 <script type="text/javascript">
-	function getCookie(cname) {
-		var name = cname + "=";
-		var decodedCookie = decodeURIComponent(document.cookie);
-		var ca = decodedCookie.split(';');
-		for(var i = 0; i <ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) == ' ') {
-				c = c.substring(1);
-			}
-			if (c.indexOf(name) == 0) {
-				return c.substring(name.length, c.length);
-			}
-		}
-		return "";
-	}
-	
-	var userid = getCookie('user_id');
+	var userid = Cookies.get('user_id');
 	if (userid) {
 		// user identified
 		console.log('user identified: ' + userid);
@@ -116,9 +101,9 @@
 		console.log("phone [" + phone + "]");
 
 		// TODO: make sure the user name include only valid chars
-		document.cookie = "name=" + name;
-		document.cookie = "last_name=" + last_name;
-		document.cookie = "phone=" + phone;
+		Cookies.set('name', name, { expires: 365 });
+		Cookies.set('last_name', last_name, { expires: 365 });
+		Cookies.set('phone', phone, { expires: 365 });
 
 		// do the ajax call to get an id
 		$.ajax({
@@ -134,7 +119,7 @@
 		}).done(function(msg) {
 
 			var user_id = msg;
-			document.cookie = "user_id=" + user_id;
+			Cookies.set('user_id', user_id, { expires: 365 });
 			document.location = 'report.html';
 
 		}).fail(function( jqXHR, textStatus, errorThrown ) {
