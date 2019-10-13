@@ -48,7 +48,7 @@
 	if (userid) {
 		// user identified
 		console.log('user identified: ' + userid);
-        document.location = 'report.html';
+        document.location = 'main.html';
 		//console.log('document.location = report.html');
 	}
 
@@ -120,14 +120,14 @@
 
 			var user_id = msg;
 			Cookies.set('user_id', user_id, { expires: 365 });
-			document.location = 'report.html';
+			document.location = 'main.html';
 
 		}).fail(function( jqXHR, textStatus, errorThrown ) {
 			console.log('ERROR: ' + textStatus);
 			console.log('ERROR: ' + errorThrown);
 		}).always(function( data_or_jqXHR, textStatus, jqXHR_or_errorThrown ) { 
-			document.location = 'report.html';			
-		});;
+			document.location = 'main.html';			
+		});
 
 		// prevent original action
 		event.preventDefault();

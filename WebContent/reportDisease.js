@@ -31,6 +31,10 @@ function getAndSendLocation( ) {
 		return true;
 	}
 
+	var answer = confirm("האם אתה בטוח?");
+	if (!answer) return false;
+	
+	
 	// check if geolocation is supported/enabled on current browser
 	if ("geolocation" in navigator) { 
 		// get location

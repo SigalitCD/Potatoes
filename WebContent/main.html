@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>עמוד ראשי</title>
+	<meta charset="windows-1255">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.0.0/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js"></script>
+	<script src="js/js.cookie.min.js"></script>
+	<script type="text/javascript">
+		var userid = Cookies.get('user_id');
+		if (!userid) {
+            document.location = 'login.html';
+		}
+	</script>
+	
+	<style>
+	p {
+		margin-bottom: 2rem;
+	}
+	</style>
+</head>
+<body style = "text-align:center;">
+	<h1>עמוד ראשי</h1>
+	<hr>
+	<p>
+	<button id="report-btn" type="button" class="btn btn-primary btn-lg btn-block">דיווח על הדבקה במיקום נוכחי</button>
+	</p>
+	<p>
+	<button id="infection-map-btn" type="button" class="btn btn-primary btn-lg btn-block">מפת הדבקות</button>
+	</p>
+	<p>
+	<button id="risk-map-btn" type="button" class="btn btn-light btn-lg btn-block">מפת סיכונים</button>
+	</p>
+	
+	<script type="text/javascript">
+		$('#report-btn').click(function(){
+			document.location = "report.html"; 
+		});
+		
+		$('#infection-map-btn').click(function(){
+			document.location = "infections.html";
+		});
+
+		$('#risk-map-btn').click(function(){
+			alert('not implemented yet');
+		});
+		
+	</script>
+</body>
+
+</html>
