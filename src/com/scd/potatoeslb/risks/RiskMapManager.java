@@ -39,11 +39,11 @@ public class RiskMapManager {
 			System.out.println("calculating risk map..");
 			riskMap.updateRisks();
 			System.out.println("..finished calculating risk map");
-		} else { // TODO: remove "else" block after debug
-			System.out.println("calculating risk map..");
-			riskMap.updateRisks();
-			System.out.println("..finished calculating risk map");
-		}
+		} /*
+			 * else { // TODO: remove "else" block after debug 
+			 * System.out.println("calculating risk map.."); riskMap.updateRisks();
+			 * System.out.println("..finished calculating risk map"); }
+			 */
 	}
 	
 	public JSONArray getRiskMap() {

@@ -253,10 +253,9 @@ public class RiskMap {
 		// get the final wind direction
 		LocalDateTime from = LocalDateTime.now().minusHours(Meteorology.HUMIDITY_SAMPLE_HOURS + Meteorology.WIND_SAMPLE_HOURS);
 		LocalDateTime to = LocalDateTime.now().minusHours(Meteorology.HUMIDITY_SAMPLE_HOURS);
-		List<Meteorology> meteorologyList = meteorologyDAO.getMeteorologiesByTimeInterval(from, to); // TODO: return this after debug
+		List<Meteorology> meteorologyList = meteorologyDAO.getMeteorologiesByTimeInterval(from, to); 
 		//List<Meteorology> meteorologyList = meteorologyDAO.getAllMeteorologies(); // TODO: remove this after debug
-
-		return Vector.sumVectors(extractWindDirections(meteorologyList));
+		return Vector.sumVectors(extractWindDirections(meteorologyList)); 
 	}
 
 	

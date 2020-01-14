@@ -31,7 +31,7 @@ public class MeteorologyScheduler {
 	private static final int CHANNEL_STATUS_INVALID = 2;
 	private static final int STATION_ID = 1;
 	private static final long INTERVAL = 10; // a fixed period between invocations, in minutes. // TODO: change to 10 minutes on production! insert into json or properties file
-	private static final TimeUnit INTERVAL_UNITS = TimeUnit.MINUTES;  // TODO: change TimeUnit to minutes on production!
+	private static final TimeUnit INTERVAL_UNITS = TimeUnit.SECONDS;  // TODO: change TimeUnit to minutes on production!
 	private static final int IMS_STATION_ID = 58; // station of HAVAT-BSOR
 	private static final String URL_STR_META_DATA = "https://api.ims.gov.il/v1/envista/stations/" + IMS_STATION_ID; // meta data 
 	private static final String URL_STR_RH = "https://api.ims.gov.il/v1/envista/stations/" + IMS_STATION_ID + "/data/8/latest"; // relative humidity

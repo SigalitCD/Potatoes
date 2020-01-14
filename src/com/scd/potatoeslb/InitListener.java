@@ -20,11 +20,12 @@ public class InitListener implements ServletContextListener {
     	@SuppressWarnings("resource")
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
    	
+    	DBSchemaCreation schemaCreator = context.getBean(DBSchemaCreation.class); 
+    	schemaCreator.createSchema();   	
+
     	meteorologyScheduler = new MeteorologyScheduler();
     	meteorologyScheduler.startScheduledTask();
     	
-    	DBSchemaCreation schemaCreator = context.getBean(DBSchemaCreation.class); // TODO: this first!!!!!!!!!!!!!!!!!!
-    	schemaCreator.createSchema();   	
     	}
 
     @Override
