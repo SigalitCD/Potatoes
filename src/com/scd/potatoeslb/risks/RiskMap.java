@@ -118,10 +118,10 @@ public class RiskMap {
 	}
 
 	private void generateJsonRiskMap() {
-		jsonRiskMap = new JSONArray();
-		JSONObject polygonJSON = null;
-		JSONArray coordinatesJSON = null;
-		JSONObject coordinateJSON = null;
+		JSONArray jsonRiskMapTmp = new JSONArray();
+		JSONObject jsonPolygon = null;
+		JSONArray jsonCoordinates = null;
+		JSONObject jsonCoordinate = null;
 
 		Iterator<Entry<Integer, Area>> riskLevelIterator = polygons.entrySet().iterator();
 		while (riskLevelIterator.hasNext()) { // iterate on risk levels
@@ -134,28 +134,28 @@ public class RiskMap {
 				int type = polygonsIterator.currentSegment(coord);
 				switch (type) {
 				case PathIterator.SEG_MOVETO:
-					polygonJSON = new JSONObject();
-					polygonJSON.put("risk_level", riskLevel); //getRiskLevelOf(coord[0], coord[1]));
-					coordinatesJSON = new JSONArray();
-					coordinateJSON = new JSONObject();
-					coordinateJSON.put("lat", coord[0]);
-					coordinateJSON.put("lng", coord[1]);
-					coordinatesJSON.put(coordinateJSON);
+					jsonPolygon = new JSONObject();
+					jsonPolygon.put("risk_level", riskLevel); //getRiskLevelOf(coord[0], coord[1]));
+					jsonCoordinates = new JSONArray();
+					jsonCoordinate = new JSONObject();
+					jsonCoordinate.put("lat", coord[0]);
+					jsonCoordinate.put("lng", coord[1]);
+					jsonCoordinates.put(jsonCoordinate);
 					break;
 				case PathIterator.SEG_LINETO:
-					coordinateJSON = new JSONObject();
-					coordinateJSON.put("lat", coord[0]);
-					coordinateJSON.put("lng", coord[1]);
-					if (coordinatesJSON != null) {
-						coordinatesJSON.put(coordinateJSON);
+					jsonCoordinate = new JSONObject();
+					jsonCoordinate.put("lat", coord[0]);
+					jsonCoordinate.put("lng", coord[1]);
+					if (jsonCoordinates != null) {
+						jsonCoordinates.put(jsonCoordinate);
 					} else {
 						System.err.println("Error in the Area object structure: SEG_LINETO before SEG_MOVETO!");
 					}
 					break;
 				case PathIterator.SEG_CLOSE:
-					polygonJSON.put("paths", coordinatesJSON);
-					polygonJSON.put("risk_level", entry.getKey());
-					jsonRiskMap.put(polygonJSON);
+					jsonPolygon.put("paths", jsonCoordinates);
+					jsonPolygon.put("risk_level", entry.getKey());
+					jsonRiskMapTmp.put(jsonPolygon);
 
 					break;
 				default:
@@ -165,6 +165,7 @@ public class RiskMap {
 			}
 			riskLevelIterator.remove(); // avoids a ConcurrentModificationException
 		}
+		jsonRiskMap = jsonRiskMapTmp;
 		//System.out.println("==========================================================");
 		//System.out.println(jsonRiskMap);
 	}
