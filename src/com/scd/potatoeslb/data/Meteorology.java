@@ -3,6 +3,11 @@ package com.scd.potatoeslb.data;
 import java.time.LocalDateTime;
 
 public class Meteorology {
+	
+	public static final int MIN_HUMIDITY_PERCENT = 10; // TODO: should be 90 // TODO: properties file
+	public static final int HUMIDITY_SAMPLE_HOURS = 2; // TODO: should be 10
+	public static final int WIND_SAMPLE_HOURS = 8; // TODO: should be 3
+
 	private int id;
 	private int stationId;
 	private LocalDateTime sampleTime;

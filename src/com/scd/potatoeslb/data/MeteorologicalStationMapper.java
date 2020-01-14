@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 public class MeteorologicalStationMapper implements RowMapper<MeteorologicalStation> {
-	MeteorologicalStation station = new MeteorologicalStation();
 
 	@Override
 	public MeteorologicalStation mapRow(ResultSet resultSet, int i) throws SQLException {
+		MeteorologicalStation station = new MeteorologicalStation();
 		station.setId(resultSet.getInt("id"));
 		station.setName(resultSet.getString("name"));
 		station.setImsId(resultSet.getInt("ims_id"));

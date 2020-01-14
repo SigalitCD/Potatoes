@@ -17,7 +17,7 @@ import com.scd.potatoeslb.spring.dao.IReportDAO;
 /**
  * Servlet implementation class InfectionsMap
  */
-@WebServlet(description = "This servlet creates a new Farmer record and returns its id in the response.", urlPatterns = { "/InfectionsMap" })
+@WebServlet(description = "This servlet returns JSON structure of a list of infected coordinates.", urlPatterns = { "/InfectionsMap" })
 public class InfectionsMap extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

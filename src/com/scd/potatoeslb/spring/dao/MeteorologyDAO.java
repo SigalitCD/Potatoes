@@ -1,5 +1,6 @@
 package com.scd.potatoeslb.spring.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -20,6 +21,8 @@ public class MeteorologyDAO implements IMeteorologyDAO {
 
 	private final String SQL_GET_BY_ID = "select * from meteorology where id = ?";
 	private final String SQL_GET_ALL = "select * from meteorology";
+	private final String SQL_GET_BY_TIME_INTERVAL = "select * from meteorology where time between ? and ? order by time asc";
+	private final String SQL_GET_LOW_HUMIDITY_COUNT = "select count(*) from meteorology where is_valid=true and relative_humidity < ? and time between ? and ?";
 	private final String SQL_DELETE = "delete from meteorology where id = ?";
 	private final String SQL_UPDATE = "update meteorology set station_id = ?, time = ?, is_valid = ?, relative_humidity = ?, wind_direction = ? where id = ?";
 	private final String SQL_INSERT = "insert into meteorology(station_id, time, is_valid, relative_humidity, wind_direction) values(?,?,?,?,?)";
@@ -29,15 +32,25 @@ public class MeteorologyDAO implements IMeteorologyDAO {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-
 	@Override
 	public Meteorology getMeteorologyById(Long id) throws DataAccessException {
-		return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Object[] { id }, new MeteorologyMapper());
+		return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Long[] { id }, new MeteorologyMapper());
 	}
 
 	@Override
 	public List<Meteorology> getAllMeteorologies() throws DataAccessException {
 		return jdbcTemplate.query(SQL_GET_ALL, new MeteorologyMapper());	
+	}
+
+	@Override
+	public List<Meteorology> getMeteorologiesByTimeInterval( LocalDateTime from, LocalDateTime to ) {
+		return jdbcTemplate.query(SQL_GET_BY_TIME_INTERVAL, new LocalDateTime[] {from, to}, new MeteorologyMapper() );
+	}
+	
+	@Override
+	public boolean isHumid( int minHumidity, LocalDateTime from, LocalDateTime to ) {
+		int lowHumidityCount = jdbcTemplate.queryForObject(SQL_GET_LOW_HUMIDITY_COUNT, new Object[] { minHumidity, from, to }, Integer.class );
+		return lowHumidityCount<=0;
 	}
 
 	@Override
@@ -59,5 +72,4 @@ public class MeteorologyDAO implements IMeteorologyDAO {
 			return false;
 		}
 	}
-
 }

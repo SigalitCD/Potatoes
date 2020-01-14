@@ -27,6 +27,7 @@ hs_err_pid*
 target/
 
 js/api-key.js
+WebContent/js/api-key.js
 
 
 # JDT-specific (Eclipse Java Development Tools)     

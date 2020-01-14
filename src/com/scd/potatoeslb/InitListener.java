@@ -12,26 +12,25 @@ import com.scd.potatoeslb.spring.dao.DBSchemaCreation;
 @WebListener
 public class InitListener implements ServletContextListener {
 		
-	private MeteorologyScheduler mst;
+	private MeteorologyScheduler meteorologyScheduler;
 	
     @Override
     public final void contextInitialized(final ServletContextEvent sce) {
 
     	@SuppressWarnings("resource")
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-
-    	//let this code out of comment when we want it to work!
-    	mst = new MeteorologyScheduler();
-		mst.startScheduledTask();
+   	
+    	meteorologyScheduler = new MeteorologyScheduler();
+    	meteorologyScheduler.startScheduledTask();
     	
-    	DBSchemaCreation schemaCreator = context.getBean(DBSchemaCreation.class);
+    	DBSchemaCreation schemaCreator = context.getBean(DBSchemaCreation.class); // TODO: this first!!!!!!!!!!!!!!!!!!
     	schemaCreator.createSchema();   	
     	}
 
     @Override
     public final void contextDestroyed(final ServletContextEvent sce) {
-    	if ( mst != null ) {
-    		mst.stopScheduledTask();
+    	if ( meteorologyScheduler != null ) {
+    		meteorologyScheduler.stopScheduledTask();
     	}
     }
 }

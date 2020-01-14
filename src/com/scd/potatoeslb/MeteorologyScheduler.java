@@ -8,12 +8,15 @@ import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import com.scd.potatoeslb.data.Meteorology;
+import com.scd.potatoeslb.risks.RiskMapManager;
 import com.scd.potatoeslb.spring.dao.IMeteorologyDAO;
 
 public class MeteorologyScheduler {
@@ -28,42 +31,59 @@ public class MeteorologyScheduler {
 	private static final int CHANNEL_STATUS_INVALID = 2;
 	private static final int STATION_ID = 1;
 	private static final long INTERVAL = 10; // a fixed period between invocations, in minutes. // TODO: change to 10 minutes on production! insert into json or properties file
+	private static final TimeUnit INTERVAL_UNITS = TimeUnit.SECONDS;  // TODO: change TimeUnit to minutes on production!
 	private static final int IMS_STATION_ID = 58; // station of HAVAT-BSOR
 	private static final String URL_STR_META_DATA = "https://api.ims.gov.il/v1/envista/stations/" + IMS_STATION_ID; // meta data 
 	private static final String URL_STR_RH = "https://api.ims.gov.il/v1/envista/stations/" + IMS_STATION_ID + "/data/8/latest"; // relative humidity
 	private static final String URL_STR_WD = "https://api.ims.gov.il/v1/envista/stations/" + IMS_STATION_ID + "/data/5/latest"; // wind direction
 	private static final String API_TOKEN = "ApiToken 1a901e45-9028-44ff-bd2c-35e82407fb9b";
+	private static boolean isFirstRun = true;
 
 	private ScheduledExecutorService execService;
-	
 	private AnnotationConfigApplicationContext context = ApplicationContextProvider.getApplicationContext();
+	private IMeteorologyDAO meteorologyDAO = context.getBean(IMeteorologyDAO.class);
 
-	
 	public void startScheduledTask() {
 		execService = Executors.newScheduledThreadPool(0);
 		execService.scheduleAtFixedRate(() -> {
 			// The repetitive task is to retrieve data from IMS API and save it to database
-
-			// get Relative Humidity 
-			String imsData = retrieveDataFromIMS(URL_STR_RH); 		
-			MeteorologyApiRawData RHData = parseJsonData(imsData);
-			// get Wind Direction
-			imsData = retrieveDataFromIMS(URL_STR_WD); 
-			MeteorologyApiRawData WDData = parseJsonData(imsData);
-			boolean isValid = validateChannelData( RHData, "Relative Humidity" ) && validateChannelData( WDData,  "Wind Directions" );
+			System.out.println("scheduled Meteorology task starts");
 			
-			// set Meteorology object
-			Meteorology meteorology = new Meteorology(0, STATION_ID, LocalDateTime.now(), isValid, RHData.value, WDData.value );
+			// get data from IMS
+			Meteorology meteorology = getMeteorolgyData();
 
 			// add record to database
-			if ( !saveToDB(meteorology) ) {
+			if (!saveToDB(meteorology)) {
 				System.out.println("Failed to save meteorolgy data to Database");
 			}
-		}, 2, INTERVAL, TimeUnit.MINUTES); // TODO: change TimeUnit to minutes on production!
+			
+			if ( isFirstRun ) {
+				// update risk map if needed
+				RiskMapManager.getRiskMapManager().refreshRiskMap();
+				isFirstRun = false;
+			}
+			
+			System.out.println("scheduled Meteorology task ends");
+			
+		}, 2, INTERVAL, INTERVAL_UNITS);
 	}
-	
+
 	public void stopScheduledTask() {
 		execService.shutdown();
+	}
+	
+	private Meteorology getMeteorolgyData() {
+		// get Relative Humidity 
+		String imsData = retrieveDataFromIMS(URL_STR_RH); 		
+		MeteorologyApiRawData RHData = parseJsonData(imsData);
+		
+		// get Wind Direction
+		imsData = retrieveDataFromIMS(URL_STR_WD); 
+		MeteorologyApiRawData WDData = parseJsonData(imsData);
+		boolean isValid = validateChannelData( RHData, "Relative Humidity" ) && validateChannelData( WDData,  "Wind Directions" );
+		
+		// set Meteorology object
+		return new Meteorology(0, STATION_ID, LocalDateTime.now(), isValid, RHData.value, WDData.value );
 	}
 
 	private String retrieveDataFromIMS( String urlStr ) {
@@ -84,7 +104,6 @@ public class MeteorologyScheduler {
 				}
 				in.close();
 				responseData = response.toString();
-				//System.out.println("METEOROLOGICAL RESPONSE DATA==================>" + responseData );
 			}
 			else {
 				System.out.println("Data request from the Meteorological Service failed. Response code: '" + responseCode + "'");
@@ -96,7 +115,6 @@ public class MeteorologyScheduler {
 		}
 	}
 	
-	//private Pair<Integer, Integer> parseJsonData( String jsonDataStr ) {
 	private MeteorologyApiRawData parseJsonData( String jsonDataStr ) {
 		MeteorologyApiRawData data = new MeteorologyApiRawData();
 		if ( StringUtils.isBlank(jsonDataStr) ) {
@@ -145,7 +163,7 @@ public class MeteorologyScheduler {
 			System.err.println( "At MeteorologyScheduler: Failed to get ApplicationContext (err)");
 			return false;
 		}
-		IMeteorologyDAO meteorologyDAO = context.getBean(IMeteorologyDAO.class);
+		
 		return meteorologyDAO.createMeteorology(meteorology);
 	}
 	
@@ -157,3 +175,4 @@ public class MeteorologyScheduler {
 		boolean isRawDataValid = false;
 	}
 }
+

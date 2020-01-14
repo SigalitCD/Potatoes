@@ -1,11 +1,13 @@
 package com.scd.potatoeslb.spring.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,7 @@ public class ReportDAO implements IReportDAO {
 
 	private final String SQL_GET_BY_ID = "select * from report where id = ?";
 	private final String SQL_GET_ALL = "select * from report";
-	//private final String SQL_GET_DISTINCT = "select distinct latitude as lat, longitude as lng, 0 as id, 0 as farmer_id, now() as report_time from report";
+	private final String SQL_GET_SINCE = "select distinct latitude, longitude, 0 as id, 0 as farmer_id, report_time from report where report_time > ?";
 	private final String SQL_GET_DISTINCT = "select distinct latitude as lat, longitude as lng, 0 as id, 0 as farmer_id, report_time as report_time from report";
 	private final String SQL_GET_REPORTS_BY_FARMER = "select * from report where farmer_id = ?";
 	private final String SQL_DELETE = "delete from report where id = ?";
@@ -41,6 +43,20 @@ public class ReportDAO implements IReportDAO {
 	public List<Report> getAllReports() {
 		return jdbcTemplate.query(SQL_GET_ALL, new ReportMapper());		
 	}
+	
+	@Override
+	public List<Report> getLatestReports( LocalDateTime since ) {
+//		List<Report> rep = null;
+//		try {
+//			rep = jdbcTemplate.query(SQL_GET_SINCE, new LocalDateTime[] {since}, new ReportMapper() );
+//		} catch (DataAccessException e ) {
+//			System.out.println(e.getMessage());
+//		}
+//		return rep;
+		
+		return jdbcTemplate.query(SQL_GET_SINCE, new LocalDateTime[] {since}, new ReportMapper() );
+	}
+
 
 	@Override
 	public JSONArray getDistinctReports() {

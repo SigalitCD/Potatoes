@@ -31,7 +31,7 @@ function getAndSendLocation( ) {
 		return true;
 	}
 
-	var answer = confirm("האם אתה בטוח?");
+	var answer = confirm("הנך עומד לדווח על הדבקה בכימשון במקום בו אתה נמצא כרגע. האם אתה בטוח שברצונך לדווח?");
 	if (!answer) return false;
 	
 	

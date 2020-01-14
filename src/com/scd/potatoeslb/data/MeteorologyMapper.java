@@ -7,10 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 
 public class MeteorologyMapper implements RowMapper<Meteorology> {
 	
-	Meteorology meteorology = new Meteorology();
-
 	@Override
 	public Meteorology mapRow(ResultSet resultSet, int i) throws SQLException {
+		Meteorology meteorology = new Meteorology();
 		meteorology.setId(resultSet.getInt("id"));
 		meteorology.setStationId(resultSet.getInt("station_id"));
 		meteorology.setSampleTime(resultSet.getTimestamp("time").toLocalDateTime());
