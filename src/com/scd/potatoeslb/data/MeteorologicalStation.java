@@ -12,7 +12,6 @@ public class MeteorologicalStation {
 	private LocalDateTime lastUpdateTime;
 	
 	public MeteorologicalStation() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public MeteorologicalStation(int id, String name, int imsId, int rhChannel, int wdChannel, LocalDateTime lastUpdateTime) {

@@ -23,6 +23,7 @@ public class MeteorologyDAO implements IMeteorologyDAO {
 	private final String SQL_GET_ALL = "select * from meteorology";
 	private final String SQL_GET_BY_TIME_INTERVAL = "select * from meteorology where time between ? and ? order by time asc";
 	private final String SQL_GET_LOW_HUMIDITY_COUNT = "select count(*) from meteorology where is_valid=true and relative_humidity < ? and time between ? and ?";
+	private final String SQL_GET_LAST_HUMID_PERIOD = "select max(time) from meteorology m1 where time > ? and not exists ( select 1 from meteorology m2 where	m2.time >= m1.time and m2.time < m1.time + interval '10 hours' and m2.relative_humidity < 90)";
 	private final String SQL_DELETE = "delete from meteorology where id = ?";
 	private final String SQL_UPDATE = "update meteorology set station_id = ?, time = ?, is_valid = ?, relative_humidity = ?, wind_direction = ? where id = ?";
 	private final String SQL_INSERT = "insert into meteorology(station_id, time, is_valid, relative_humidity, wind_direction) values(?,?,?,?,?)";
@@ -45,6 +46,11 @@ public class MeteorologyDAO implements IMeteorologyDAO {
 	@Override
 	public List<Meteorology> getMeteorologiesByTimeInterval( LocalDateTime from, LocalDateTime to ) {
 		return jdbcTemplate.query(SQL_GET_BY_TIME_INTERVAL, new LocalDateTime[] {from, to}, new MeteorologyMapper() );
+	}
+	
+	@Override
+	public LocalDateTime getLatestHumidPeriod( LocalDateTime from, int duration, int minHumidity ) {
+		return jdbcTemplate.queryForObject(SQL_GET_LAST_HUMID_PERIOD, new Object[] {from, duration, minHumidity}, LocalDateTime.class );
 	}
 	
 	@Override

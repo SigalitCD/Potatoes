@@ -29,7 +29,6 @@ public class DiseaseReport extends HttpServlet {
      */
     public DiseaseReport() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

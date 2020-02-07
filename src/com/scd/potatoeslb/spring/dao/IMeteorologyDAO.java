@@ -10,6 +10,7 @@ public interface IMeteorologyDAO {
 	Meteorology getMeteorologyById(Long id);
 	List<Meteorology> getAllMeteorologies();
 	List<Meteorology> getMeteorologiesByTimeInterval( LocalDateTime from, LocalDateTime to );
+	LocalDateTime getLatestHumidPeriod( LocalDateTime from, int duration, int minHumidity );
 	boolean deleteMeteorology(Long id);
 	boolean updateMeteorology(Meteorology meteorology);
 	boolean createMeteorology(Meteorology meteorology);

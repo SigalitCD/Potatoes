@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public class Meteorology {
 	
 	public static final int MIN_HUMIDITY_PERCENT = 90; // TODO: should be 90 // TODO: properties file
-	public static final int HUMIDITY_SAMPLE_HOURS = 10; // TODO: should be 10
+	public static final int FIRST_HUMIDITY_SAMPLE_PERIOD_HOURS = 10; // TODO: should be 10
+	public static final int SECOND_HUMIDITY_SAMPLE_PERIOD_HOURS = 10; // TODO: should be 10
 	public static final int WIND_SAMPLE_HOURS = 3; // TODO: should be 3
 
 	private int id;

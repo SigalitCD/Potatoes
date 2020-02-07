@@ -18,7 +18,7 @@ public class DBSchemaCreation {
 		
 		
 		public void createSchema() {
-			System.out.println("Before schema creation");
+			System.out.println("Starting schema creation");
 			jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS potatoes");
 			
 			//jdbcTemplate.execute("SET search_path TO potatoes, public;");
@@ -30,7 +30,8 @@ public class DBSchemaCreation {
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.farmer_id_seq");
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.meteorological_station_id_seq");	
 			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.meteorology_id_seq");
-			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.report_id_seq");	
+			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.report_id_seq");
+			jdbcTemplate.execute("CREATE SEQUENCE IF NOT EXISTS potatoes.json_risk_map_id_seq");
 			
 			jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS potatoes.farmer " + 
 					"( " + 
@@ -91,7 +92,15 @@ public class DBSchemaCreation {
 					"    ON potatoes.report USING btree " + 
 					"    (report_time) " );			
 			
-			System.out.println("After schema creation");
+			jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS potatoes.json_risk_map " + 
+					"( " + 
+					"    id integer NOT NULL DEFAULT nextval('potatoes.json_risk_map_id_seq'::regclass), " + 
+					"    risk_map character varying, " + 
+					"    save_time timestamp without time zone ) " +  
+					"WITH ( OIDS = FALSE )");
+			
+			//TODO: if possible, when json_risk_map is empty, populate it with initial values (minimal risk level in all the area)
+			System.out.println("End of schema creation");
 		}
 		
 	}

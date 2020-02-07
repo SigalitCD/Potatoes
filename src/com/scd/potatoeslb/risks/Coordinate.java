@@ -14,8 +14,8 @@ public class Coordinate implements Cloneable {
 	public static Map<Range<Double>, Integer> riskLevels;
 	final static double earthRadius = 6371e3; // meters
 	private Point2D.Double point;
-	private Double risk = 0d; // TODO: -1?
-	private int riskLevel = -1; // TODO: -1?
+	private Double risk = 0d; 
+	private int riskLevel = 0;
 	private boolean edge;
 	private boolean classified = false;
 
@@ -121,13 +121,20 @@ public class Coordinate implements Cloneable {
 			// calculate the distance in meters between this coordinate and the infected coordinate
 			double distance = getDistance(infectedCoordinate);
 			// calculate the risk caused by the infected coordinate
-			double distanceRisk = 990.8 * Math.pow(distance, -1.33); // risk by distance of this coordinate from the infected coordinate
 			double windRisk = 0.3 * Math.pow(angel, -0.47);
+			double distanceRisk = 0;
+			if ( distance > RiskMap.SQUARE_SIZE ) {
+				distanceRisk = 990.8 * Math.pow(distance, -1.33); // risk by distance of this coordinate from the infected coordinate
+			}
 			double currentInfectedcoordinateRisk = (6 * windRisk + distanceRisk) / 7;
-
 			// sum the risks of all infected coordinates
 			risk = risk + currentInfectedcoordinateRisk - (risk * currentInfectedcoordinateRisk);
 			setRiskLevel();
+		}
+		if (Double.isNaN(risk)) {
+			System.err.println("risk is NaN. windVector is " + windVector );
+		} else if ( risk > 2 ) {
+			System.err.println("risk is " + risk + ". windVector is " + windVector );		
 		}
 		return risk;
 	}
@@ -143,7 +150,6 @@ public class Coordinate implements Cloneable {
 		try {
 			coordinateClone = (Coordinate) super.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -172,9 +178,10 @@ public class Coordinate implements Cloneable {
 			Range<Double> range = pair.getKey();
 			if (range.contains(risk)) {
 				riskLevel = pair.getValue();
-				break;
+				return;
 			}
 		}
+		System.err.println("risk level of coordinate " + getLatitude() +", " + getLongitude() + " is out of range with value=" + risk);
 	}
 
 	private static void initRiskLevels() {

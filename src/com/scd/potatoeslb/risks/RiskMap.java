@@ -4,17 +4,13 @@ import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +24,7 @@ import org.springframework.core.env.Environment;
 import com.scd.potatoeslb.ApplicationContextProvider;
 import com.scd.potatoeslb.data.Meteorology;
 import com.scd.potatoeslb.data.Report;
+import com.scd.potatoeslb.spring.dao.IJsonRiskMapDAO;
 import com.scd.potatoeslb.spring.dao.IMeteorologyDAO;
 import com.scd.potatoeslb.spring.dao.IReportDAO;
 
@@ -38,53 +35,71 @@ public class RiskMap {
 	Environment environment;
 
 	// TODO: to properties file
-	private final int FIRST_DAY_OF_SEASON1 = 60;// 60; // day in the year
-	private final int LAST_DAY_OF_SEASON1 = 243; // day in the year
-	private final int FIRST_DAY_OF_SEASON2 = 244;// day in the year
-	private final int LAST_DAY_OF_SEASON2 = 59; // day in the year
-	private final int REPORT_MONTHS_AGO = 6; // default value in case now is no season's time
-	private final double SQUARE_SIZE = 300;
+	public static final double SQUARE_SIZE = 300;
 	// TODO: end of : to properties file
 
 	private Path2D.Float polygon; // map boundaries
-	List<List<Coordinate>> grid;  // grid of the bounding box of the map boundaries
+	List<List<Coordinate>> grid; // grid of the bounding box of the map boundaries
 	private List<Coordinate> infectedCoordinates;
 	private Map<Integer, Area> polygons = new HashMap<>(); // key=risk level, value=Area that contains all the polygons with this risk level
 	private JSONArray jsonRiskMap; // risk map represented in JSON
 	private AnnotationConfigApplicationContext context = ApplicationContextProvider.getApplicationContext();
 	private IReportDAO reportDAO = context.getBean(IReportDAO.class);
 	private IMeteorologyDAO meteorologyDAO = context.getBean(IMeteorologyDAO.class);
+	private IJsonRiskMapDAO jsonRiskMapDAO = context.getBean(IJsonRiskMapDAO.class);
 
 	// Constructor
 	public RiskMap() {
-		// int x = Integer.valueOf(environment.getProperty("FIRST_DAY_OF_SEASON1")); TODO: it doesn't work. find why and if it will work on Heroku
+		// int x = Integer.valueOf(environment.getProperty("FIRST_DAY_OF_SEASON1")); TODO: it doesn't work. find why and if it
+		// will work on Heroku
 		buildPolygon();
 		buildGrid();
+		loadStoredJsonRiskMap();
+		if (jsonRiskMap == null) {
+			System.out.println("jsonRiskMap failed to load from storage. Generating empty riskMap.");
+			generateEmptyJsonRiskMap();
+		} else {
+			System.out.println("jsonRiskMap was loaded susccessfully from persistent storage.");
+		}
+
+	}
+
+	public void generateEmptyJsonRiskMap() {
+		generateRiskPolygons();
+		generateJsonRiskMap();
+		if (!jsonRiskMapDAO.createRiskMap(jsonRiskMap.toString())) { // store new risk map in database
+			System.err.println("Failed to save empty jsonRiskMap in persistent storage.");
+		} else {
+			System.out.println("jsonRiskMap was saved susccessfully to persistent storage.");
+		}
 	}
 
 	public JSONArray getJsonRiskMap() {
 		return jsonRiskMap;
 	}
 
-	public void updateRisks() {
-		calculateRisks();
+	public void updateRisks(LocalDateTime windDirectionSamplePeriodStart) {
+		calculateRisks(windDirectionSamplePeriodStart);
 		long time1 = System.currentTimeMillis();
 		generateRiskPolygons();
 		long time2 = System.currentTimeMillis();
-		long diff = (time2-time1); 
-		System.out.println("=======>generateRiskPolygons took " + diff + " msec.");
+		long diff = (time2 - time1);
+		System.out.println("generateRiskPolygons took " + diff + " msec.");
 		generateJsonRiskMap();
 		long time3 = System.currentTimeMillis();
-		diff = (time3-time2); 
-		System.out.println("=======>generateJsonRiskMap took " + diff + " msec.");
-	};
+		diff = (time3 - time2);
+		System.out.println("generateJsonRiskMap took " + diff + " msec.");
+		if (!jsonRiskMapDAO.createRiskMap(jsonRiskMap.toString())) { // store new risk map in database
+			System.err.println("Failed to save jsonRiskMap in persistent storage");
+		}
+	}
 
-	private void calculateRisks() {
+	private void calculateRisks(LocalDateTime windDirectionSamplePeriodStart) {
 		// get the final wind direction
-		Vector windVector = calculateWindVector();
+		Vector windVector = calculateWindVector(windDirectionSamplePeriodStart);
 
 		// get infected coordinates list out of reports
-		List<Report> reportsList = reportDAO.getLatestReports(getReportsStartDate());
+		List<Report> reportsList = reportDAO.getLatestReports(RiskMapManager.getReportsStartDate());
 		infectedCoordinates = extractInfectedCoordinates(reportsList);
 
 		// calculate risk for each coordinate in the map
@@ -107,10 +122,12 @@ public class RiskMap {
 			for (Coordinate coordinate : col) {
 				if (coordinate != null) {
 					area = polygons.get(coordinate.getRiskLevel());
-					if (area == null) { // new 
-						polygons.put(coordinate.getRiskLevel(), new Area(new Rectangle2D.Double(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getDistanceFromLatitude(SQUARE_SIZE), coordinate.getDistanceFromLongitude(SQUARE_SIZE))));
+					if (area == null) { // new
+						polygons.put(coordinate.getRiskLevel(), new Area(new Rectangle2D.Double(coordinate.getLatitude(), coordinate.getLongitude(),
+								coordinate.getDistanceFromLatitude(SQUARE_SIZE), coordinate.getDistanceFromLongitude(SQUARE_SIZE))));
 					} else {
-						area.add(new Area( new Rectangle2D.Double(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getDistanceFromLatitude(SQUARE_SIZE), coordinate.getDistanceFromLongitude(SQUARE_SIZE))));
+						area.add(new Area(new Rectangle2D.Double(coordinate.getLatitude(), coordinate.getLongitude(), coordinate.getDistanceFromLatitude(SQUARE_SIZE),
+								coordinate.getDistanceFromLongitude(SQUARE_SIZE))));
 					}
 				}
 			}
@@ -118,7 +135,7 @@ public class RiskMap {
 	}
 
 	private void generateJsonRiskMap() {
-		JSONArray jsonRiskMapTmp = new JSONArray();
+		JSONArray jsonRiskMapTmp = new JSONArray(); // To avoid read-write concurrency problems, use temp object to build the map, then set jsonRiskMap reference.
 		JSONObject jsonPolygon = null;
 		JSONArray jsonCoordinates = null;
 		JSONObject jsonCoordinate = null;
@@ -135,7 +152,7 @@ public class RiskMap {
 				switch (type) {
 				case PathIterator.SEG_MOVETO:
 					jsonPolygon = new JSONObject();
-					jsonPolygon.put("risk_level", riskLevel); //getRiskLevelOf(coord[0], coord[1]));
+					jsonPolygon.put("risk_level", riskLevel); // getRiskLevelOf(coord[0], coord[1]));
 					jsonCoordinates = new JSONArray();
 					jsonCoordinate = new JSONObject();
 					jsonCoordinate.put("lat", coord[0]);
@@ -166,8 +183,6 @@ public class RiskMap {
 			riskLevelIterator.remove(); // avoids a ConcurrentModificationException
 		}
 		jsonRiskMap = jsonRiskMapTmp;
-		//System.out.println("==========================================================");
-		//System.out.println(jsonRiskMap);
 	}
 
 	private void buildGrid() {
@@ -215,6 +230,12 @@ public class RiskMap {
 		verticesList.add(new Coordinate(30.762078, 35.280489)); // Hazeva
 		verticesList.add(new Coordinate(30.8001393, 34.2227325)); // Sinai 2
 		verticesList.add(new Coordinate(31.374159, 34.319267)); // Khan Yunis
+		
+//		verticesList.add(new Coordinate(31.3861394, 34.456639)); // kibbutz Reim (north)
+//		verticesList.add(new Coordinate(31.303992, 34.5183511)); // kibbutz Urim (east)
+//		verticesList.add(new Coordinate(31.210295, 34.4632533)); // Kibbutz Gvulot (south)
+//		verticesList.add(new Coordinate(31.2967792, 34.2347272)); // Rafah (west)
+
 		return verticesList;
 	}
 
@@ -237,28 +258,23 @@ public class RiskMap {
 		return infectedCoordinates;
 	}
 
-	private LocalDateTime getReportsStartDate() {
-		LocalDateTime now = LocalDateTime.now();
-		int currentDayOfYear = now.getDayOfYear();
-		if (currentDayOfYear >= FIRST_DAY_OF_SEASON1 && currentDayOfYear <= LAST_DAY_OF_SEASON1) {
-			return now.withDayOfYear(FIRST_DAY_OF_SEASON1);
-		}
-		if (currentDayOfYear >= FIRST_DAY_OF_SEASON2 && currentDayOfYear <= LAST_DAY_OF_SEASON2) {
-			return now.withDayOfYear(FIRST_DAY_OF_SEASON2);
-		}
-		return now.minusMonths(REPORT_MONTHS_AGO);
-	}
-
-	private Vector calculateWindVector() {
+	private Vector calculateWindVector(LocalDateTime from) {
 		// get the final wind direction
-		LocalDateTime from = LocalDateTime.now().minusHours(Meteorology.HUMIDITY_SAMPLE_HOURS + Meteorology.WIND_SAMPLE_HOURS);
-		LocalDateTime to = LocalDateTime.now().minusHours(Meteorology.HUMIDITY_SAMPLE_HOURS);
-		List<Meteorology> meteorologyList = meteorologyDAO.getMeteorologiesByTimeInterval(from, to); 
-		//List<Meteorology> meteorologyList = meteorologyDAO.getAllMeteorologies(); // TODO: remove this after debug
-		return Vector.sumVectors(extractWindDirections(meteorologyList)); 
+		LocalDateTime to = from.plusHours(Meteorology.WIND_SAMPLE_HOURS);
+		List<Meteorology> meteorologyList = meteorologyDAO.getMeteorologiesByTimeInterval(from, to);
+		// List<Meteorology> meteorologyList = meteorologyDAO.getAllMeteorologies(); // TODO: remove this after debug
+		return Vector.sumVectors(extractWindDirections(meteorologyList));
 	}
 
-	
+	private void loadStoredJsonRiskMap() {
+		String jsonRiskMapStr = jsonRiskMapDAO.getLatestRiskMap();
+		if (jsonRiskMapStr != null) {
+			jsonRiskMap = new JSONArray(jsonRiskMapStr);
+		}
+//		JSONObject jsnobject = new JSONObject(jsonRiskMapStr);
+//		jsonRiskMap = jsnobject.getJSONArray("risk_level");
+	}
+
 //	public static final String ANSI_RESET = "\u001B[0m";
 //	public static final String ANSI_WHITE = "\u001B[37m";
 //	public static final String ANSI_BLACK = "\u001B[30m";
