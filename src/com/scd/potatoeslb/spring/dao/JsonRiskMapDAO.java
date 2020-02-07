@@ -18,7 +18,7 @@ public class JsonRiskMapDAO implements IJsonRiskMapDAO{
 	
 	JdbcTemplate jdbcTemplate;
 
-	private final String SQL_GET_LATEST = "select a.id, a.risk_map, a.save_time from json_risk_map a inner join ( select id, max(save_time) save_time from json_risk_map group by id ) b on a.id = b.id and a.save_time = b.save_time limit 1";
+	private final String SQL_GET_LATEST = "select a.risk_map from json_risk_map a inner join ( select id, max(save_time) save_time from json_risk_map group by id ) b on a.id = b.id and a.save_time = b.save_time limit 1";
 	private final String SQL_INSERT = "insert into json_risk_map(risk_map, save_time) values(?, now())";
 
 	@Autowired
@@ -29,34 +29,28 @@ public class JsonRiskMapDAO implements IJsonRiskMapDAO{
 	@Override
 	public String getLatestRiskMap() {
 		
-		try {
-			List<String> data = jdbcTemplate.query(SQL_GET_LATEST, new RowMapper<String>(){
-                public String mapRow(ResultSet rs, int rowNum) 
-                                             throws SQLException {
-                        return rs.getString(2);
-                }
-           });	
-			
-			return data.get(0);
-					 
-					 
-		} catch ( DataAccessException e ) {
-			System.out.println("Data Access Exception at JsonRiskMapDAO.getLatestRiskMap: " + e.getMessage());
-			return null;
-		}
-
-		
-		
-		
-		
-		
-		
 //		try {
-//			return jdbcTemplate.queryForObject(SQL_GET_LATEST, String.class );
+//			List<String> data = jdbcTemplate.query(SQL_GET_LATEST, new RowMapper<String>(){
+//                public String mapRow(ResultSet rs, int rowNum) 
+//                                             throws SQLException {
+//                        return rs.getString(2);
+//                }
+//           });	
+//			
+//			return data.get(0);
+//					 
+//					 
 //		} catch ( DataAccessException e ) {
 //			System.out.println("Data Access Exception at JsonRiskMapDAO.getLatestRiskMap: " + e.getMessage());
 //			return null;
 //		}
+
+		try {
+			return jdbcTemplate.queryForObject(SQL_GET_LATEST, String.class );
+		} catch ( DataAccessException e ) {
+			System.out.println("Data Access Exception at JsonRiskMapDAO.getLatestRiskMap: " + e.getMessage());
+			return null;
+		}
 	}
 	
 	@Override
