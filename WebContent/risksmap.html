@@ -80,6 +80,31 @@
         .always(function(){
         	console.log("always called after getJSON");
         });
+        
+        // create markers on reports
+        console.log('getting infections report');
+        var jqxhr = $.getJSON("InfectionsMap")
+        .done(function(data){
+        	console.log('got infections report');
+        	console.log(data);
+        	$.each(data, function(index, item) {
+        		var image = "infection_icon.png";
+        		marker = new google.maps.Marker({
+        			position: new google.maps.LatLng(item.lat, item.lng)
+        			,map: map
+        			,label: "" + index
+        			,title: item.report_time
+        			,icon: image
+        		});
+        	});
+        })
+        .fail(function(){
+        	console.log("getJSON failed, need to update the UI");
+        })
+        .always(function(){
+        	console.log("always called after getJSON");
+        });
+        
     }
 
 	$( document ).ready(function() {
