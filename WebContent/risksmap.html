@@ -25,13 +25,14 @@
     <script src="https://cdn.rtlcss.com/bootstrap/v4.0.0/js/bootstrap.min.js"></script>
     <script src="js/api-key.js"></script>
     <script type="text/javascript">     
+
+    var infowindow;
     function initMap() {
         console.log('initMap');
 
         var map = new google.maps.Map(document.getElementById('map'));
-
+        infowindow = new google.maps.InfoWindow({});
         var bounds = new google.maps.LatLngBounds();
-        
         var risk_colors = ['#002060' ,'#0070C0' ,'#00B0F0' ,'#76933C' ,'#C4D79B' ,'#C00000' ,'#FF0000' ,'#000000'];
 
         // draw the legend
@@ -89,12 +90,24 @@
         	console.log(data);
         	$.each(data, function(index, item) {
         		var image = "infection_icon.png";
-        		marker = new google.maps.Marker({
+        		var marker = new google.maps.Marker({
         			position: new google.maps.LatLng(item.lat, item.lng)
         			,map: map
         			,label: "" + index
         			,title: item.report_time
         			,icon: image
+        		});
+        		marker.addListener('click', function() {
+    			    var contentString = ''
+    			    + '<div id="popup_body">'
+    			    + '<h1>פרטי דיווח</h1>'
+    			    + '<p><b>מיקום:</b> <span id="popup_info_location">' + item.lat +', ' + item.lng + '</span></p>'
+    			    + '<p><b>זמן דיווח:</b> <span id="popup_info_timestamp">' + item.report_time + '</span></p>'
+    			    + '<p><b>זיהוי מדווח:</b> <span id="popup_info_farmer_id">' + item.farmer_id + '</span></p>'
+    			    + '<p><a href="#" onclick="infowindow.close();">מחק דיווח</a></p>'
+    			    + '</div>';
+    			    infowindow.setContent(contentString);
+        			infowindow.open(map, this);
         		});
         	});
         })
@@ -106,6 +119,7 @@
         });
         
     }
+    
 
 	$( document ).ready(function() {
 	
