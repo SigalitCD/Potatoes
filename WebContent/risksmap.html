@@ -27,6 +27,15 @@
     <script type="text/javascript">     
 
     var infowindow;
+    
+    function removeReport(id) {
+	    var url = "RemoveReport?id=" + id;
+    	$.get(url, function(data){
+    		console.log('remove reprot: ' + id + ', result=' + data);
+    	}).fail(function(){
+    		console.log('failed to remove report id: ' + id);
+    	});
+    }
     function initMap() {
         console.log('initMap');
 
@@ -104,7 +113,7 @@
     			    + '<p><b>מיקום:</b> <span id="popup_info_location">' + item.lat +', ' + item.lng + '</span></p>'
     			    + '<p><b>זמן דיווח:</b> <span id="popup_info_timestamp">' + item.report_time + '</span></p>'
     			    + '<p><b>זיהוי מדווח:</b> <span id="popup_info_farmer_id">' + item.farmer_id + '</span></p>'
-    			    + '<p><a href="#" onclick="infowindow.close();">מחק דיווח</a></p>'
+    			    + '<p><a href="#" onclick="removeReport(' + item.id + '),infowindow.close();">מחק דיווח</a></p>'
     			    + '</div>';
     			    infowindow.setContent(contentString);
         			infowindow.open(map, this);
