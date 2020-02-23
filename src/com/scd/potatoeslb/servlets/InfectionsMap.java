@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.scd.potatoeslb.ApplicationContextProvider;
+import com.scd.potatoeslb.risks.RiskMapManager;
 import com.scd.potatoeslb.spring.dao.IReportDAO;
 
 /**
@@ -43,7 +44,7 @@ public class InfectionsMap extends HttpServlet {
 		if ( reportDAO == null ) {
 			System.err.println( "Failed to get ReportDAO (err)");
 		}
-		JSONArray jsonArray = reportDAO.getDistinctReports();
+		JSONArray jsonArray = reportDAO.getLatestReportsExtended(RiskMapManager.getReportsStartDate());
 		if( jsonArray != null ) {
 			response.getWriter().append( jsonArray.toString());
 		}		

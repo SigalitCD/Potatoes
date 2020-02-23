@@ -11,7 +11,7 @@ public interface IReportDAO {
 	public Report getReportById(int id);
 	public List<Report> getAllReports();
 	public List<Report> getLatestReports( LocalDateTime since );
-	public JSONArray getDistinctReports();
+	public JSONArray getLatestReportsExtended( LocalDateTime since );
 	public List<Report> getReportByFarmer(int FarmerId);
 	public boolean deleteReport(int id);
 	public boolean updateReport(Report report);

@@ -101,6 +101,7 @@ public class RiskMap {
 		// get infected coordinates list out of reports
 		List<Report> reportsList = reportDAO.getLatestReports(RiskMapManager.getReportsStartDate());
 		infectedCoordinates = extractInfectedCoordinates(reportsList);
+		System.out.println( "infected coordinates count: "  + infectedCoordinates.size() );// TODO: remove after debug
 
 		// calculate risk for each coordinate in the map
 		for (int i = 0; i < grid.size(); i++) {
@@ -225,16 +226,19 @@ public class RiskMap {
 	private List<Coordinate> createVerticesList() {
 		// TODO: get from properties
 		List<Coordinate> verticesList = new ArrayList<Coordinate>();
-		verticesList.add(new Coordinate(31.541743, 34.574145)); // sederot
-		verticesList.add(new Coordinate(31.516077, 35.130235)); // Hebron
-		verticesList.add(new Coordinate(30.762078, 35.280489)); // Hazeva
-		verticesList.add(new Coordinate(30.8001393, 34.2227325)); // Sinai 2
-		verticesList.add(new Coordinate(31.374159, 34.319267)); // Khan Yunis
 		
-//		verticesList.add(new Coordinate(31.3861394, 34.456639)); // kibbutz Reim (north)
-//		verticesList.add(new Coordinate(31.303992, 34.5183511)); // kibbutz Urim (east)
-//		verticesList.add(new Coordinate(31.210295, 34.4632533)); // Kibbutz Gvulot (south)
-//		verticesList.add(new Coordinate(31.2967792, 34.2347272)); // Rafah (west)
+//		verticesList.add(new Coordinate(31.541743, 34.574145)); // sederot
+//		verticesList.add(new Coordinate(31.516077, 35.130235)); // Hebron
+//		verticesList.add(new Coordinate(30.762078, 35.280489)); // Hazeva
+//		verticesList.add(new Coordinate(30.8001393, 34.2227325)); // Sinai 2
+//		verticesList.add(new Coordinate(31.374159, 34.319267)); // Khan Yunis
+
+		verticesList.add(new Coordinate(31.4051361, 34.2703391)); // gaza sea (north-west)
+		verticesList.add(new Coordinate(31.3861394, 34.456639)); // kibbutz Reim (north-east)
+		verticesList.add(new Coordinate(31.303992, 34.5183511)); // kibbutz Urim (east)
+		verticesList.add(new Coordinate(31.210295, 34.4632533)); // Kibbutz Gvulot (south-east)
+		verticesList.add(new Coordinate(31.183820, 34.212045)); // Rafah, Egypt (south-west)
+		//verticesList.add(new Coordinate(31.2967792, 34.2347272)); // Rafah (west)
 
 		return verticesList;
 	}

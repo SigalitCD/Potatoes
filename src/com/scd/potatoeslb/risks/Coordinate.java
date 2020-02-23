@@ -129,13 +129,14 @@ public class Coordinate implements Cloneable {
 			double currentInfectedcoordinateRisk = (6 * windRisk + distanceRisk) / 7;
 			// sum the risks of all infected coordinates
 			risk = risk + currentInfectedcoordinateRisk - (risk * currentInfectedcoordinateRisk);
-			setRiskLevel();
+//			setRiskLevel();
 		}
 		if (Double.isNaN(risk)) {
 			System.err.println("risk is NaN. windVector is " + windVector );
 		} else if ( risk > 2 ) {
 			System.err.println("risk is " + risk + ". windVector is " + windVector );		
 		}
+		setRiskLevel();
 		return risk;
 	}
 
@@ -187,24 +188,24 @@ public class Coordinate implements Cloneable {
 	private static void initRiskLevels() {
 		riskLevels = new HashMap<Range<Double>, Integer>();
 		// TODO: from properties file
-//		riskLevels.put(Range.between(0d, 0.0500), 0);
-//		riskLevels.put(Range.between(0.0500, 0.1000), 1);
-//		riskLevels.put(Range.between(01000., 0.1500), 2);
-//		riskLevels.put(Range.between(0.1500, 0.2500), 3);
-//		riskLevels.put(Range.between(0.2500, 0.4000), 4);
-//		riskLevels.put(Range.between(0.4000, 0.5000), 5);
-//		riskLevels.put(Range.between(0.5000, 0.8000), 6);
-//		riskLevels.put(Range.between(0.8000, 2.0000), 7);
+		riskLevels.put(Range.between(0d, 0.0500), 0);
+		riskLevels.put(Range.between(0.0500, 0.1000), 1);
+		riskLevels.put(Range.between(0.1000, 0.1500), 2);
+		riskLevels.put(Range.between(0.1500, 0.2500), 3);
+		riskLevels.put(Range.between(0.2500, 0.4000), 4);
+		riskLevels.put(Range.between(0.4000, 0.5000), 5);
+		riskLevels.put(Range.between(0.5000, 0.8000), 6);
+		riskLevels.put(Range.between(0.8000, 2.0000), 7);
 		
 		
-		riskLevels.put(Range.between(0d, 0.060), 0);
-		riskLevels.put(Range.between(0.060, 0.070), 1);
-		riskLevels.put(Range.between(0.070, 0.07400), 2);
-		riskLevels.put(Range.between(0.07400, 0.07500), 3);
-		riskLevels.put(Range.between(0.07500, 0.0800), 4);
-		riskLevels.put(Range.between(0.0800, 0.0830), 5);
-		riskLevels.put(Range.between(0.0830, 0.0850), 6);
-		riskLevels.put(Range.between(0.0850, 2.0000), 7);
+//		riskLevels.put(Range.between(0d, 0.060), 0);
+//		riskLevels.put(Range.between(0.060, 0.070), 1);
+//		riskLevels.put(Range.between(0.070, 0.07400), 2);
+//		riskLevels.put(Range.between(0.07400, 0.07500), 3);
+//		riskLevels.put(Range.between(0.07500, 0.0800), 4);
+//		riskLevels.put(Range.between(0.0800, 0.0830), 5);
+//		riskLevels.put(Range.between(0.0830, 0.0850), 6);
+//		riskLevels.put(Range.between(0.0850, 2.0000), 7);
 
 	}
 }
