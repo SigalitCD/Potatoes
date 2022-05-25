@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<properties>
-		<spring.framework>5.1.1.RELEASE</spring.framework>
+		<spring.framework>5.2.22.RELEASE</spring.framework>
 		<postgres.version>42.1.4</postgres.version>
 	</properties>
 	<dependencies>
